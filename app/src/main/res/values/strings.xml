@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">DAMflix</string>
+
+    <string name="desc_user_profile_icon">Icono de perfil de usuario</string>
+    <string name="user_role_critic">Critico de Cine</string>
+    <string name="user_name">Victor</string>
+    <string name="user_films_viewed">42 Peliculas Vistas</string>
+    <string name="user_films_reviewed">12 Reseñas</string>
+
 </resources>
