@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             DAMflixTheme {
-                loadListaPeliculasScreen()
+                LoadListaPeliculasScreen()
 
 
             }
@@ -68,7 +68,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun loadListaPeliculasScreen() {
+fun LoadListaPeliculasScreen() {
     Scaffold(
         topBar = {
             TopAppBar(
