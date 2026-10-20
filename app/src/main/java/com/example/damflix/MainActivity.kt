@@ -38,7 +38,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -50,15 +49,86 @@ import com.example.damflix.ui.theme.DAMflixTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.Alignment
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             DAMflixTheme {
-                LoadListaPeliculasScreen()
+                val navController = rememberNavController()
+
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { Text("DAMFlix - Catálogo") },
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer
+                            )
+                        )
+                    },
+                    bottomBar = {
+                        // Observamos la ruta actual del BackStack
+                        val navBackStackEntry by navController.currentBackStackEntryAsState()
+                        val rutaActual = navBackStackEntry?.destination?.route
+
+                        NavigationBar {
+                            // Definimos una lista inmutable con las rutas
+                            listOf(
+                                Ruta.Inicio,
+                                Ruta.Listado,
+                                Ruta.Formulario,
+                                Ruta.Perfil
+                            ).forEach { ruta ->
+                                NavigationBarItem(
+                                    selected = rutaActual == ruta.path,
+                                    onClick = {
+                                        if (rutaActual != ruta.path) {
+                                            navController.navigate(ruta.path) {
+                                                popUpTo(navController.graph.startDestinationId) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }
+                                        }
+                                    },
+                                    icon = { Icon(ruta.icon, contentDescription = ruta.label) },
+                                    label = { Text(ruta.label) }
+                                )
+                            }
+                        }
+                    }
+                ) { innerPadding ->
+                    // Es obligatorio aplicar innerPadding al NavHost para no superponer vistas
+                    NavHost(
+                        navController = navController,
+                        startDestination = Ruta.Inicio.path,
+                        modifier = Modifier.padding(innerPadding)
+                    ) {
+                        composable(Ruta.Inicio.path) {
+                            LoadInicioScreen()
+                        }
+                        composable(Ruta.Listado.path) {
+                            LoadListaPeliculasScreen()
+                        }
+                        composable(Ruta.Formulario.path) {
+                            LoadFormularioScren()
+                        }
+                        composable(Ruta.Perfil.path) {
+                            LoadProfileScreen()
+                        }
+                    }
+                }
 
 
             }
@@ -66,17 +136,25 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
+@Composable
+fun LoadInicioScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(50.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "Bienvenido a DAMflix")
+        Text(text = "Version: 1.4")
+    }
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoadListaPeliculasScreen() {
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("DAMFlix - Catalogo de Películas") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                )
-        ) },
 
     ) { innerPadding ->
         Box (modifier = Modifier.padding(innerPadding)) {
