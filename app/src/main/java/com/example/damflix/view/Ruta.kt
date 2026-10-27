@@ -1,4 +1,4 @@
-package com.example.damflix
+package com.example.damflix.view
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle

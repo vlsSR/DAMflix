@@ -1,11 +1,8 @@
-package com.example.damflix
+package com.example.damflix.view
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,65 +16,65 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.damflix.ui.theme.DAMflixTheme
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.damflix.model.Pelicula
+import com.example.damflix.viewmodel.PeliculaViewModel
+import com.example.damflix.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListaPeliculasScreenStart() {
-    Scaffold(
+fun ListaPeliculasScreenStart(
+    viewModel: PeliculaViewModel,
+    modifier: Modifier = Modifier
+) {
+    val peliculas by viewModel.listaPeliculas.collectAsStateWithLifecycle()
 
-    ) { innerPadding ->
-        Box (modifier = Modifier.padding(innerPadding)) {
-            val peliculas = remember {
-                mutableStateListOf(
-                    Pelicula(1, "El Padrino", "Francis Ford Coppola", "1972", true),
-                    Pelicula(2, "El Caballero Oscuro", "Christopher Nolan", "2008", true),
-                    Pelicula(3, "Pulp Fiction", "Quentin Tarantino", "1994", false),
-                    Pelicula(4, "Forrest Gump", "Robert Zemeckis", "1994", true)
-                )
-            }
-            listaPeliculas(peliculas, onToggleFavorito = { id ->
-                val index = peliculas.indexOfFirst { it.id == id }
-                val peli = peliculas[index]
-                peliculas[index] = peli.copy(esFavorita = !peli.esFavorita)
-            })
-
-        }
-    }
-}
-
-@Composable
-fun listaPeliculas(peliculas: List<Pelicula>, onToggleFavorito: (Int) -> Unit) {
     LazyColumn(
+        modifier = modifier,
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(items = peliculas, key = { peli -> peli.id }) { pelicula ->
+        items(
+            items = peliculas,
+            key = { p -> p.id }
+        ) { pelicula ->
             Card(modifier = Modifier.fillMaxWidth()) {
                 Row(
                     modifier = Modifier.padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = pelicula.titulo, modifier = Modifier.weight(1f))
-                    IconButton(onClick = { onToggleFavorito(pelicula.id) }) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = pelicula.titulo,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Text(
+                            text = "${pelicula.director} • ${pelicula.estreno}",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
+                    IconButton(onClick = { viewModel.conmutarFavorito(pelicula) }) {
                         Icon(
                             imageVector = if (pelicula.esFavorita) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = "Favorito",
+                            contentDescription = stringResource(R.string.btn_aceptar),
                             tint = if (pelicula.esFavorita) Color.Red else Color.Gray
                         )
                     }
                 }
             }
-
         }
     }
 }

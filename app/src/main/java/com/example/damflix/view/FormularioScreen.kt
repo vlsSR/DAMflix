@@ -1,4 +1,4 @@
-package com.example.damflix
+package com.example.damflix.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,14 +15,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.damflix.R
+import com.example.damflix.viewmodel.PeliculaViewModel
 
 @Composable
-fun FormularioScreenStart() {
+fun FormularioScreenStart(
+    viewModel: PeliculaViewModel,
+    onPeliculaGuardada: () -> Unit = {},
+    modifier: Modifier = Modifier
+) {
     var titulo by remember { mutableStateOf("") }
     var director by remember { mutableStateOf("") }
     var estreno by remember { mutableStateOf("") }
     var esVista by remember { mutableStateOf(false) }
+
+    val esFormularioValido = titulo.isNotBlank() && director.isNotBlank() && estreno.isNotBlank()
 
 
     Column (
@@ -35,7 +44,7 @@ fun FormularioScreenStart() {
         OutlinedTextField(
             value = titulo,
             onValueChange = { titulo = it },
-            label = { Text("Título de la Película") },
+            label = { Text(stringResource(R.string.form_title)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
@@ -43,7 +52,7 @@ fun FormularioScreenStart() {
         OutlinedTextField(
             value = director,
             onValueChange = { director = it },
-            label = { Text("Director de la Pelicula") },
+            label = { Text(stringResource(R.string.form_director)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
@@ -51,22 +60,30 @@ fun FormularioScreenStart() {
         OutlinedTextField(
             value = estreno,
             onValueChange = { estreno = it },
-            label = { Text("Año de estreno de la pelicula") },
+            label = { Text(stringResource(R.string.form_year)) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
 
         Row(verticalAlignment = Alignment.CenterVertically){
             Checkbox(checked = esVista, onCheckedChange = { esVista = it })
-            Text("Ya he visto esta película")
+            Text(stringResource(R.string.form_watched))
         }
 
         Button(
-            onClick = { /* Guardar película */ },
-            enabled = titulo.isNotBlank() && director.isNotBlank(), // Validación
+            onClick = {
+                val estrenoInt = estreno.toIntOrNull() ?: 0
+                viewModel.agregarPelicula(titulo, director, estrenoInt, esVista)
+                titulo = ""
+                director = ""
+                estreno = ""
+                esVista = false
+                onPeliculaGuardada()
+            },
+            enabled = esFormularioValido,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Guardar Película")
+            Text(stringResource(R.string.form_save))
         }
     }
 

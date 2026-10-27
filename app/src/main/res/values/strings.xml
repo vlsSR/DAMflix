@@ -6,5 +6,14 @@
     <string name="user_name">Victor</string>
     <string name="user_films_viewed">42 Peliculas Vistas</string>
     <string name="user_films_reviewed">12 Reseñas</string>
+    <string name="title_topbar">DAMFlix - Catálogo</string>
+    <string name="form_title">Título de la Película</string>
+    <string name="form_director">Director de la Pelicula</string>
+    <string name="form_year">Año de estreno de la pelicula</string>
+    <string name="form_watched">Ya he visto esta pelicula</string>">
+    <string name="form_save">Guardar Pelicula</string>
+    <string name="info_welcome">Bienvenido a DAMflix</string>
+    <string name="info_version">Version: 1.4</string>
+    <string name="btn_aceptar">Aceptar</string>
 
 </resources>
