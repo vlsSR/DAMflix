@@ -1,4 +1,4 @@
-package com.example.damflix.model
+package com.example.damflix.data
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase

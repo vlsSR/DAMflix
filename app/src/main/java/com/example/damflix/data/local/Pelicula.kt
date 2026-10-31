@@ -1,4 +1,4 @@
-package com.example.damflix.model
+package com.example.damflix.data.local
 
 data class Pelicula(
     val id: Int = 0,

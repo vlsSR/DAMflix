@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,6 +41,7 @@ fun FormularioScreenStart(
             .padding(50.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(text = stringResource(R.string.form_welcome), style = MaterialTheme.typography.headlineMedium)
 
         OutlinedTextField(
             value = titulo,
@@ -73,7 +75,12 @@ fun FormularioScreenStart(
         Button(
             onClick = {
                 val estrenoInt = estreno.toIntOrNull() ?: 0
-                viewModel.agregarPelicula(titulo, director, estrenoInt, esVista)
+                viewModel.agregarPelicula(
+                    titulo = titulo,
+                    director = director,
+                    estreno = estrenoInt,
+                    esVista = esVista
+                )
                 titulo = ""
                 director = ""
                 estreno = ""

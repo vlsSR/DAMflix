@@ -1,10 +1,11 @@
-package com.example.damflix.model
+package com.example.damflix.data
 
 import android.content.ContentValues
+import com.example.damflix.data.local.Pelicula
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class PeliculaRepository(private val dbHelper: DAMFlixDbHelper) {
+class PeliculaRepositorySQL(private val dbHelper: DAMFlixDbHelper) {
 
     suspend fun obtenerTodas(): List<Pelicula> = withContext(Dispatchers.IO) {
         val lista = mutableListOf<Pelicula>()
